@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "acmecorp"
+version = "0.1.0"
+description = ""
+authors = ["renren017 <altynai.mamytova17@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Django = "^5.0.6"
+djangorestframework = "^3.15.1"
+django-filter = "^24.2"
+djangorestframework-simplejwt = "^5.3.1"
+psycopg2-binary = "^2.9.9"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+django-jazzmin = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
