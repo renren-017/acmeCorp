@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Location, Manufacturer, Product
+from .models import Category, Location, Manufacturer, Product, CurrencyRate
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -21,13 +21,18 @@ class ManufacturerAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'currency', 'category', 'location', 'is_delivery_enabled')
-    list_filter = ('currency', 'category', 'location', 'is_delivery_enabled')
+    list_display = ('name', 'price', 'category', 'location', 'is_delivery_enabled')
+    list_filter = ('category', 'location', 'is_delivery_enabled')
     search_fields = ('name', 'description')
     autocomplete_fields = ['category', 'location']
+
+
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'rate', 'created_at')
 
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(CurrencyRate, CurrencyAdmin)

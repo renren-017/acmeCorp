@@ -55,7 +55,7 @@ class Product(models.Model):
 
     price = models.IntegerField("Product Price")
     price_sort = models.IntegerField("Product Price in Default Currency", blank=True, null=True)
-    currency = models.ForeignKey(CurrencyRate, on_delete=models.SET(CurrencyRate.USD), default=CurrencyRate.USD)
+    currency_code = models.ForeignKey(CurrencyRate, on_delete=models.SET_NULL, null=True, blank=True)
 
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET("Unknown"), null=True, blank=True)
 
