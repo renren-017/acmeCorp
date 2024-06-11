@@ -1,8 +1,11 @@
+from django.conf import settings
+from django.core.cache import cache
 from django_filters import OrderingFilter, FilterSet
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 
 from products.models import Product, Category, Location, Manufacturer
 from products.serializer import ProductSerializer, ProductManageSerializer, ManufacturerDetailSerializer, \
@@ -12,7 +15,7 @@ from products.serializer import ProductSerializer, ProductManageSerializer, Manu
 class ProductsViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     django_filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ('name', 'category__name', 'location__name')
+    filterset_fields = ('name', 'category', 'location')
     ordering_fields = ('price_sort',)
     ordering = ('-id',)
 
@@ -32,7 +35,13 @@ class ProductsViewSet(viewsets.ModelViewSet):
         ]
     )
     def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+        cache_key = settings.PRODUCT_CACHE_KEY.format("_".join(request.query_params.values()))
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return Response(data=cached_data, status=status.HTTP_200_OK)
+        response = super().list(request, *args, **kwargs)
+        cache.set(cache_key, response.data, settings.DEFAULT_CACHE_TIMEOUT)
+        return response
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
